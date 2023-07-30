@@ -2,7 +2,7 @@ package but.with;
 
 public class Time {
     private float time = 0f;
-    private float tick = 1f;
+    private float tick = 0.3f;
     private int currentTick = 0;
     boolean justTicked = false;
 

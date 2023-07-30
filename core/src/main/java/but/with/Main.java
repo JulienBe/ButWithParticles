@@ -16,7 +16,7 @@ public class Main extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         grid = new Grid();
-        grid.addBlock();
+        grid.addPiece();
     }
 
     @Override
