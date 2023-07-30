@@ -23,7 +23,7 @@ public class MyColor {
     private int color = 0;
     private int shade = 0;
 
-    public void draw(Batch batch, int x, int y, float w, float h) {
+    public void draw(Batch batch, float x, float y, float w, float h) {
         batch.draw(textures.get(color * COLOR_MAX + shade), x, y, w, h);
     }
 }
