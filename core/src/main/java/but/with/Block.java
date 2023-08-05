@@ -4,26 +4,28 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class Block {
 
-    public static final float W = 16f;
+    public static final int SIZE = 8;
+    private BlockPixel[] pixels = new BlockPixel[8 * 8];
     private MyColor color = new MyColor();
-    int gridX = 0;
-    int gridY = 0;
-    float displayX = 0f;
-    float displayY = 0f;
+    GridPos gridPos; // Keeping it as it will probably make things easier, could be computed from the pixels
 
-    public Block(int grixX, int grixY) {
-        this.gridX = grixX;
-        this.gridY = grixY;
-        this.displayX = gridX * W;
-        this.displayY = gridY * W;
+    public Block(int gridX, int gridY) {
+        this.gridPos = new GridPos(gridX, gridY);
+        for (int i = 0; i < pixels.length; i++) {
+            pixels[i] = new BlockPixel(new GridPos(i % 8, i / 8), color);
+        }
     }
 
     public void display(Batch batch) {
-        color.draw(batch, displayX, displayY, W, W);
+        for (int i = 0; i < pixels.length; i++) {
+            pixels[i].display(batch);
+        }
     }
 
-    public void updateY(int offsetY) {
-        gridY += offsetY;
-        displayY = gridY * W;
+    public void updateY(int newGridY) {
+        gridPos.updateY(newGridY);
+        for (int i = 0; i < pixels.length; i++) {
+            pixels[i].updateY(newGridY);
+        }
     }
 }

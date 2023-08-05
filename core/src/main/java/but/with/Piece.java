@@ -15,23 +15,33 @@ public class Piece {
     };
     private final List<Block> blocks = new ArrayList<>();
     private boolean active = true;
+    private int blockedTicks = 0;
 
-    public Piece(List<Block> blockGrid) {
-        Offset[] template = TEMPLATES[Rnd.instance.nextInt(TEMPLATES.length)];
+    public Piece(Grid grid) {
+        //Offset[] template = TEMPLATES[Rnd.instance.nextInt(TEMPLATES.length)];
+        Offset[] template = TEMPLATES[1];
         for (Offset offset : template) {
             Block b = new Block(4 + offset.x, 19 + offset.y);
             blocks.add(b);
-            if (b.gridY < Grid.H) {
-                blockGrid.set(b.gridY * Grid.W + b.gridX, b);
-            }
+            if (b.gridPos.y < Grid.H)
+                grid.set(b);
         }
     }
 
-    public void act(Time time, List<Block> blockGrid) {
+    public void act(Time time, Grid grid) {
         if (time.justTicked) {
-            boolean canGoDown = blocks.stream().allMatch(b -> Physic.canGoDown(b, blockGrid, blocks));
-            if (canGoDown)
-                blocks.forEach(b -> Physic.moveDown(b, blockGrid));
+            if (active) {
+                boolean canGoDown = blocks.stream().allMatch(b -> Physic.canGoDown(b, grid, blocks));
+                if (canGoDown) {
+                    blocks.forEach(b -> Physic.moveDown(b, grid));
+                    blockedTicks = 0;
+                } else
+                    blockedTicks++;
+                if (blockedTicks > 2)
+                    active = false;
+            } else {
+                blocks.forEach(b -> grid.setNull(b.gridPos));
+            }
         }
     }
 }

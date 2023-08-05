@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
 
+    public static final float PIXEL_SIZE = 2.0f;
     private final Time time = new Time();
     private Grid grid; // lateinit cause libGDX
     private SpriteBatch batch;

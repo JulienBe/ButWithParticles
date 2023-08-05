@@ -3,24 +3,34 @@ package but.with;
 import java.util.List;
 
 public class Physic {
-    public static void moveDown(Block b, List<Block> blocks) {
-        b.updateY(-1);
-        if (b.gridY >= 0 && b.gridY < Grid.H) {
-            blocks.set(b.gridY * Grid.W + b.gridX, b);
-        }
+    public static void moveDown(Block b, Grid grid) {
+        if (isWithinGrid(b.gridPos))
+            grid.setNull(b.gridPos);
+        b.updateY(b.gridPos.downOneBlock());
+        grid.safeSet(b);
     }
 
-    public static boolean canGoDown(Block b, List<Block> blockGrid, List<Block> shouldMove) {
-        int wannaX = b.gridX;
-        int wannaY = b.gridY - 1;
-        return (
-                wannaY >= 0 && wannaY < Grid.H &&
-                wannaX >= 0 && wannaX < Grid.W &&
-                    (
-                        blockGrid.get(wannaY * Grid.W + wannaX) == Grid.NULL_BLOCK ||
-                        shouldMove.contains(blockGrid.get(wannaY * Grid.W + wannaX))
-                    )
-        ) ||
-                wannaY >= Grid.H; // some blocks may be more than 1 block above the grid
+    public static boolean canGoDown(Block b, Grid grid, List<Block> ignoreBlocks) {
+        int wannaX = b.gridPos.x;
+        int wannaY = grid.clampY(b.gridPos.downOneBlock());
+        if (!((grid.isNull(wannaX, wannaY) || ignoreBlocks.contains(grid.safeGet(wannaX, wannaY)))
+            &&
+            (isWithinGrid(wannaX, wannaY) || wannaY >= Grid.H))) {
+            System.out.println("Can go do for " + wannaX + ", " + wannaY);
+            System.out.println(grid.isNull(wannaX, wannaY) + " || " + ignoreBlocks.contains(grid.safeGet(wannaX, wannaY)));
+            System.out.println(isWithinGrid(wannaX, wannaY) || wannaY >= Grid.H);
+        }
+        return
+            (grid.isNull(wannaX, wannaY) || ignoreBlocks.contains(grid.safeGet(wannaX, wannaY)))
+            &&
+            (isWithinGrid(wannaX, wannaY) || wannaY >= Grid.H); // some blocks may be more than 1 block above the grid
+    }
+
+    private static boolean isWithinGrid(GridPos gridPos) {
+        return isWithinGrid(gridPos.x, gridPos.y);
+    }
+
+    private static boolean isWithinGrid(int x, int y) {
+        return x >= 0 && x < Grid.W && y >= 0 && y < Grid.H;
     }
 }
