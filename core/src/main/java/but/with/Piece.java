@@ -21,7 +21,7 @@ public class Piece {
         //Offset[] template = TEMPLATES[Rnd.instance.nextInt(TEMPLATES.length)];
         Offset[] template = TEMPLATES[1];
         for (Offset offset : template) {
-            Block b = new Block(4 + offset.x, 19 + offset.y);
+            Block b = new Block((4 + offset.x) * Block.SIZE, (19 + offset.y) * Block.SIZE);
             blocks.add(b);
             if (b.gridPos.y < Grid.H)
                 grid.set(b);

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Grid {
-    public static final int W = 10;
-    public static final int H = 20;
+    public static final int W = 10 * Block.SIZE;
+    public static final int H = 20 * Block.SIZE;
     public static final Block NULL_BLOCK = new Block(5, 5);
     private final List<Block> blockGrid = new ArrayList<>();
     private final Array<Piece> pieces = new Array<>();
