@@ -9,22 +9,26 @@ import com.badlogic.gdx.utils.Array;
 import java.util.stream.IntStream;
 
 public class MyColor {
-    public static final int COLOR_MAX = 15;
-    public static final int SHADE_MAX = 4;
+    public static final int COLORS = 16;
+    public static final int SHADES = 6;
     public static final Array<TextureRegion> textures = getTextureRegions();
 
     private static Array<TextureRegion> getTextureRegions() {
         Texture t = new Texture(Gdx.files.internal("palette_pico8.png"));
-        return IntStream.rangeClosed(0, COLOR_MAX * SHADE_MAX)
-            .mapToObj(i -> new TextureRegion(t, i % SHADE_MAX, i / COLOR_MAX, 1, 1))
+        return IntStream.rangeClosed(0, (COLORS * SHADES) - 1)
+            .mapToObj(i -> new TextureRegion(t, i % SHADES, i / SHADES, 1, 1))
             .collect(Array::new, Array::add, Array::addAll);
     }
 
     private int color = 0;
     private int shade = 0;
 
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     public void draw(Batch batch, float x, float y, float w, float h) {
-        batch.draw(textures.get(color * COLOR_MAX + shade), x, y, w, h);
+        batch.draw(textures.get(color * SHADES + shade), x, y, 1, 1);
     }
 }
 

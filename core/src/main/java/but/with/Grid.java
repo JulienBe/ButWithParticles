@@ -40,7 +40,6 @@ public class Grid {
         blockGrid.set(b.gridPos.y * W + b.gridPos.x, b);
     }
     public void setNull(GridPos gridPos) {
-        System.out.println("Set null for " + gridPos.x + ", " + gridPos.y);
         blockGrid.set(gridPos.y * W + gridPos.x, NULL_BLOCK);
     }
 
