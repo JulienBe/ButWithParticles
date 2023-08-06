@@ -20,7 +20,7 @@ public class BlockPixel {
         color.draw(batch, gridPos.x * PIXEL_SIZE, gridPos.y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
     }
 
-    public void updateY(int gridOffsetY) {
-        gridPos.y += gridOffsetY;
+    public void updateY(int y) {
+        gridPos.y = y;
     }
 }

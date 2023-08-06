@@ -25,7 +25,7 @@ public class Block {
     public void updateY(int newGridY) {
         gridPos.updateY(newGridY);
         for (int i = 0; i < pixels.length; i++) {
-            pixels[i].updateY(newGridY);
+            pixels[i].updateY(newGridY + (i / 8));
         }
     }
 }
