@@ -3,20 +3,21 @@ package but.with;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
-import java.util.List;
+import static but.with.BlockPixel.NULL;
 
 public class Grid {
     public static final int W = 10 * Block.SIZE;
     public static final int H = 20 * Block.SIZE;
-    public static final Block NULL_BLOCK = new Block(5, 5);
-    private final List<Block> blockGrid = new ArrayList<>();
+    public static final int DISPLAY_H = H + (4 * Block.SIZE);
+    int x = Block.SIZE * 2;
+    int y = Block.SIZE * 2;
     private final Array<Piece> pieces = new Array<>();
+    private final Array<BlockPixel> pixels = new Array<>(DISPLAY_H * W);
 
     public Grid() {
         for (int x = 0; x < W; x++) {
-            for (int y = 0; y < H; y++) {
-                blockGrid.add(NULL_BLOCK);
+            for (int y = 0; y < DISPLAY_H; y++) {
+                pixels.add(NULL);
             }
         }
     }
@@ -26,9 +27,7 @@ public class Grid {
     }
 
     public void display(SpriteBatch batch) {
-        blockGrid.stream()
-            .filter(b -> b != NULL_BLOCK)
-            .forEach(b -> b.display(batch));
+        pixels.forEach(p -> p.display(batch, this));
     }
 
     public void act(Time time) {
@@ -36,35 +35,48 @@ public class Grid {
             pieces.forEach(p -> p.act(time, this));
     }
 
-    public void set(Block b) {
-        blockGrid.set(b.gridPos.y * W + b.gridPos.x, b);
+    public void set(BlockPixel pixel) {
+        pixels.set(pixel.gridPos.y * W + pixel.gridPos.x, pixel);
     }
     public void setNull(GridPos gridPos) {
-        blockGrid.set(gridPos.y * W + gridPos.x, NULL_BLOCK);
+        pixels.set(gridPos.y * W + gridPos.x, NULL);
     }
 
     public boolean isNull(int wannaX, int wannaY) {
-        return blockGrid.get(wannaY * W + wannaX) == NULL_BLOCK;
+        return pixels.get(wannaY * W + wannaX) == NULL;
     }
 
-    public Block get(int wannaX, int wannaY) {
-        return blockGrid.get(wannaY * W + wannaX);
+    public BlockPixel get(int wannaX, int wannaY) {
+        return pixels.get(wannaY * W + wannaX);
     }
 
-    public void safeSet(Block b) {
-        if (b.gridPos.y >= 0 && b.gridPos.y < H && b.gridPos.x >= 0 && b.gridPos.x < W)
-            blockGrid.set(b.gridPos.y * W + b.gridPos.x, b);
+    public void safeSet(BlockPixel b) {
+        if (b.gridPos.y >= 0 && b.gridPos.y < DISPLAY_H && b.gridPos.x >= 0 && b.gridPos.x < W)
+            pixels.set(b.gridPos.y * W + b.gridPos.x, b);
     }
 
-    public Block safeGet(int x, int y) {
-        if (y >= 0 && y < H && x >= 0 && x < W)
+    public BlockPixel safeGet(int x, int y) {
+        if (y >= 0 && y < DISPLAY_H && x >= 0 && x < W)
             return get(x, y);
-        return NULL_BLOCK;
+        return NULL;
     }
 
     public int clampY(int y) {
         if (y < 0)
             return 0;
-        return Math.min(y, H - 1);
+        return Math.min(y, DISPLAY_H - 1);
+    }
+
+    public void setNullIfMe(BlockPixel pixel) {
+        if (get(pixel.gridPos.x, pixel.gridPos.y) == pixel)
+            setNull(pixel.gridPos);
+    }
+
+    public int getHighest(int x, int startY) {
+        for (int y = startY; y >= 0; y--) {
+            if (get(x, y) != NULL)
+                return y;
+        }
+        return 0;
     }
 }

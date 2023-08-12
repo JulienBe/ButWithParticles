@@ -28,7 +28,7 @@ public class MyColor {
     }
 
     public void draw(Batch batch, float x, float y, float w, float h) {
-        batch.draw(textures.get(color * SHADES + shade), x, y, 1, 1);
+        batch.draw(textures.get(color * SHADES + shade), x, y, w, h);
     }
 }
 

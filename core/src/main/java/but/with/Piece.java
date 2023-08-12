@@ -2,6 +2,7 @@ package but.with;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Piece {
     private static final Offset[][] TEMPLATES = {
@@ -19,28 +20,33 @@ public class Piece {
 
     public Piece(Grid grid) {
         //Offset[] template = TEMPLATES[Rnd.instance.nextInt(TEMPLATES.length)];
-        Offset[] template = TEMPLATES[1];
+        Offset[] template = TEMPLATES[0];
         for (Offset offset : template) {
-            Block b = new Block((4 + offset.x) * Block.SIZE, (19 + offset.y) * Block.SIZE);
+            Block b = new Block(Grid.W/2 + offset.x*Block.SIZE, Grid.H + offset.y*Block.SIZE, grid);
             blocks.add(b);
-            if (b.gridPos.y < Grid.H)
-                grid.set(b);
         }
     }
 
     public void act(Time time, Grid grid) {
         if (time.justTicked) {
             if (active) {
-                boolean canGoDown = blocks.stream().allMatch(b -> Physic.canGoDown(b, grid, blocks));
-                if (canGoDown) {
-                    blocks.forEach(b -> Physic.moveDown(b, grid));
+                List<Integer> diffMap = blocks
+                    .stream()
+                    .map(block -> block.getDiffFromHighestIn(grid))
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList());
+
+                if (diffMap.stream().allMatch(diff -> diff >= Block.SIZE)) {
                     blockedTicks = 0;
-                } else
+                    blocks.forEach(b -> b.moveDown(grid));
+                } else {
                     blockedTicks++;
-                if (blockedTicks > 2)
-                    active = false;
+                    if (blockedTicks > 2) {
+                        active = false;
+                    }
+                }
             } else {
-                blocks.forEach(b -> grid.setNull(b.gridPos));
+                blocks.forEach(b -> b.setNull(grid));
             }
         }
     }
