@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Array;
 
 import static but.with.BlockPixel.NULL;
 
-public class Grid {
+public class Grid implements InputHandler {
     public static final int W = 10 * Block.SIZE;
     public static final int H = 20 * Block.SIZE;
     public static final int DISPLAY_H = H + (4 * Block.SIZE);
@@ -81,5 +81,17 @@ public class Grid {
                 return y;
         }
         return 0;
+    }
+
+    @Override
+    public void onLeft() {
+        pieces.forEach(piece -> piece.lateralMove(-2, this));
+        InputHandler.super.onLeft();
+    }
+
+    @Override
+    public void onRight() {
+        pieces.forEach(piece -> piece.lateralMove(+2, this));
+        InputHandler.super.onRight();
     }
 }

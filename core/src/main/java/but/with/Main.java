@@ -14,6 +14,7 @@ public class Main extends ApplicationAdapter {
     private Background background;
     private Grid grid; // lateinit cause libGDX
     private SpriteBatch batch;
+    private Gamepad gamepad;
 
     @Override
     public void create() {
@@ -21,6 +22,9 @@ public class Main extends ApplicationAdapter {
         grid = new Grid();
         grid.addPiece();
         background = new Background();
+        gamepad = new Gamepad();
+        gamepad.addHandler(grid);
+        Gdx.input.setInputProcessor(gamepad);
     }
 
     @Override

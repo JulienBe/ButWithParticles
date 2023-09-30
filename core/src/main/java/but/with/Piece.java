@@ -46,6 +46,10 @@ public class Piece {
     }
 
     public void convertToSand(Grid grid) {
-        
+
+    }
+
+    public void lateralMove(int i, Grid grid) {
+        blocks.forEach(b -> b.lateralMove(i, grid));
     }
 }

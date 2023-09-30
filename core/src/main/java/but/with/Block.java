@@ -39,6 +39,13 @@ public class Block {
             grid.set(p);
         });
     }
+    public void lateralMove(int i, Grid grid) {
+        pixels.forEach(p -> {
+            grid.setNullIfMe(p);
+            p.gridPos.x += i;
+            grid.set(p);
+        });
+    }
 
     private BlockPixel lower(int x) {
         return pixels.stream()
@@ -55,4 +62,5 @@ public class Block {
             .map(p -> p.gridPos.y - grid.getHighest(p.gridPos.x, p.gridPos.y - 1))
             .collect(Collectors.toList());
     }
+
 }
