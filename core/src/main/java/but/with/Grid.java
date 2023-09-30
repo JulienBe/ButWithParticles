@@ -70,6 +70,12 @@ public class Grid implements InputHandler {
         return Math.min(y, DISPLAY_H - 1);
     }
 
+    public int clampX(int x) {
+        if (x < 0)
+            return 0;
+        return Math.min(x, W - 1);
+    }
+
     public void setNullIfMe(BlockPixel pixel) {
         if (get(pixel.gridPos.x, pixel.gridPos.y) == pixel)
             setNull(pixel.gridPos);

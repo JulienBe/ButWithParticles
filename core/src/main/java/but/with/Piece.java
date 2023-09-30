@@ -2,6 +2,8 @@ package but.with;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 public class Piece {
@@ -50,6 +52,29 @@ public class Piece {
     }
 
     public void lateralMove(int i, Grid grid) {
-        blocks.forEach(b -> b.lateralMove(i, grid));
+        // There is probably a more elegant way than this left/right split
+        if (i > 0) {
+            int rightest = blocks.stream()              // iterate over all the block pixels to find the rightest
+                .mapToInt(b ->
+                    b.pixels.stream()
+                        .mapToInt(p -> p.gridPos.x)
+                        .max()
+                        .getAsInt())
+                .max()
+                .getAsInt();
+            i = Math.min(i, Grid.W - rightest - 1);     // Now set a new value of i if it's too big
+        } else {
+            int leftest = blocks.stream()               // iterate over all the block pixels to find the leftest
+                .mapToInt(b ->
+                    b.pixels.stream()
+                        .mapToInt(p -> p.gridPos.x)
+                        .min()
+                        .getAsInt())
+                .min()
+                .getAsInt();
+            i = Math.max(i, -leftest);                  // Now set a new value of i if it's too big
+        }
+        int finalI = i;
+        blocks.forEach(b -> b.lateralMove(finalI, grid));
     }
 }

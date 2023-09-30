@@ -7,6 +7,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A simple tetris block, 4 make a piece
+ * Stored as a list of pixels
+ */
 public class Block {
 
     public static final int SIZE = 8;
