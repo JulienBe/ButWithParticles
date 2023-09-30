@@ -13,6 +13,7 @@ public class Grid implements InputHandler {
     int y = Block.SIZE * 2;
     private final Array<Piece> pieces = new Array<>();
     private final Array<BlockPixel> pixels = new Array<>(DISPLAY_H * W);
+    private MyColor color = new MyColor(8);
 
     public Grid() {
         for (int x = 0; x < W; x++) {
@@ -27,6 +28,7 @@ public class Grid implements InputHandler {
     }
 
     public void display(SpriteBatch batch) {
+        color.draw(batch, x, y, W * Main.PIXEL_SIZE, DISPLAY_H * Main.PIXEL_SIZE);
         pixels.forEach(p -> p.display(batch, this));
     }
 
@@ -91,13 +93,13 @@ public class Grid implements InputHandler {
 
     @Override
     public void onLeft() {
-        pieces.forEach(piece -> piece.lateralMove(-2, this));
+        pieces.forEach(piece -> piece.lateralMove(-Block.SIZE, this));
         InputHandler.super.onLeft();
     }
 
     @Override
     public void onRight() {
-        pieces.forEach(piece -> piece.lateralMove(+2, this));
+        pieces.forEach(piece -> piece.lateralMove(+Block.SIZE, this));
         InputHandler.super.onRight();
     }
 }
