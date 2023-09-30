@@ -11,6 +11,7 @@ public class Main extends ApplicationAdapter {
 
     public static final float PIXEL_SIZE = 2.0f;
     private final Time time = new Time();
+    private Background background;
     private Grid grid; // lateinit cause libGDX
     private SpriteBatch batch;
 
@@ -19,6 +20,7 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         grid = new Grid();
         grid.addPiece();
+        background = new Background();
     }
 
     @Override
@@ -30,6 +32,7 @@ public class Main extends ApplicationAdapter {
         time.act(Gdx.graphics.getDeltaTime());
         grid.act(time);
         batch.begin();
+        background.display(batch);
         grid.display(batch);
         batch.end();
     }
