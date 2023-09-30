@@ -15,7 +15,6 @@ public class Piece {
         {new Offset(0, 0), new Offset(1, 0), new Offset(2, 0), new Offset(2, 1)}  // L
     };
     private final List<Block> blocks = new ArrayList<>();
-    private boolean active = true;
     private int blockedTicks = 0;
 
     public Piece(Grid grid) {
@@ -27,27 +26,26 @@ public class Piece {
         }
     }
 
-    public void act(Time time, Grid grid) {
+    public boolean act(Time time, Grid grid) {
         if (time.justTicked) {
-            if (active) {
-                List<Integer> diffMap = blocks
-                    .stream()
-                    .map(block -> block.getDiffFromHighestIn(grid))
-                    .flatMap(List::stream)
-                    .collect(Collectors.toList());
+            List<Integer> diffMap = blocks
+                .stream()
+                .map(block -> block.getDiffFromHighestIn(grid))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
-                if (diffMap.stream().allMatch(diff -> diff >= Block.SIZE)) {
-                    blockedTicks = 0;
-                    blocks.forEach(b -> b.moveDown(grid));
-                } else {
-                    blockedTicks++;
-                    if (blockedTicks > 2) {
-                        active = false;
-                    }
-                }
+            if (diffMap.stream().allMatch(diff -> diff >= Block.SIZE)) {
+                blockedTicks = 0;
+                blocks.forEach(b -> b.moveDown(grid));
             } else {
-                blocks.forEach(b -> b.setNull(grid));
+                blockedTicks++;
+                return blockedTicks <= 2;
             }
         }
+        return true;
+    }
+
+    public void convertToSand(Grid grid) {
+        
     }
 }

@@ -32,7 +32,10 @@ public class Grid {
 
     public void act(Time time) {
         if (time.justTicked)
-            pieces.forEach(p -> p.act(time, this));
+            pieces.forEach(p -> {
+                if (!p.act(time, this))
+                    p.convertToSand(this);
+            });
     }
 
     public void set(BlockPixel pixel) {
