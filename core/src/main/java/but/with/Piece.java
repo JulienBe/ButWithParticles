@@ -2,8 +2,6 @@ package but.with;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 public class Piece {
@@ -32,11 +30,11 @@ public class Piece {
         if (time.justTicked) {
             List<Integer> diffMap = blocks
                 .stream()
-                .map(block -> block.getDiffFromHighestIn(grid))
+                .map(block -> block.diffFromHighestPointIn(grid))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-            if (diffMap.stream().allMatch(diff -> diff > 0)) {
+            if (diffMap.stream().allMatch(diff -> diff > 1)) {
                 blockedTicks = 0;
                 blocks.forEach(b -> b.moveDown(grid));
             } else {

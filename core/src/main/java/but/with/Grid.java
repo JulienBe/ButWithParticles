@@ -56,11 +56,13 @@ public class Grid implements InputHandler {
             setNull(pixel.gridPos);
     }
 
-    public int getHighest(int x, int startY) {
-        for (int y = startY; y >= 0; y--) {
+    /**
+     * @return the y coordinate of the first non-null pixel below the given one
+     */
+    public int castRayDown(int x, int startY) {
+        for (int y = startY; y >= 0; y--)
             if (get(x, y) != NULL)
                 return y;
-        }
         return 0;
     }
 
