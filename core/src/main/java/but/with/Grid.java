@@ -35,8 +35,10 @@ public class Grid implements InputHandler {
     public void act(Time time) {
         if (time.justTicked)
             pieces.forEach(p -> {
-                if (!p.act(time, this))
-                    p.convertToSand(this);
+                if (!p.act(time, this)) {
+                    p.convertToSand();
+                    pieces.removeValue(p, true);
+                }
             });
     }
 

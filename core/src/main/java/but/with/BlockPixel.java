@@ -11,6 +11,7 @@ public class BlockPixel {
     public static final BlockPixel NULL = new BlockPixel(new GridPos(0, 0), new MyColor(), new Grid());
     GridPos gridPos;
     private MyColor color;
+    boolean sand = false;
 
     public BlockPixel(GridPos gridPos, MyColor color, Grid grid) {
         this.gridPos = gridPos;

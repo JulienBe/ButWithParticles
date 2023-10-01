@@ -14,7 +14,7 @@ public class Piece {
         {new Offset(0, 0), new Offset(1, 0), new Offset(2, 0), new Offset(0, 1)}, // J
         {new Offset(0, 0), new Offset(1, 0), new Offset(2, 0), new Offset(2, 1)}  // L
     };
-    private final List<Block> blocks = new ArrayList<>();
+    final List<Block> blocks = new ArrayList<>();
     private int blockedTicks = 0;
 
     public Piece(Grid grid) {
@@ -45,8 +45,8 @@ public class Piece {
         return true;
     }
 
-    public void convertToSand(Grid grid) {
-
+    public void convertToSand() {
+        blocks.forEach(b -> b.pixels.forEach(p -> p.sand = true));
     }
 
     public void lateralMove(int i, Grid grid) {
