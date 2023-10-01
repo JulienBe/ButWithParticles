@@ -28,14 +28,6 @@ public class Block {
         }
     }
 
-    public void display(Batch batch, Grid grid) {
-        pixels.forEach(p -> p.display(batch, grid));
-    }
-
-    public void setNull(Grid grid) {
-        pixels.forEach(p -> grid.setNull(p.gridPos));
-    }
-
     public void moveDown(Grid grid) {
         pixels.forEach(p -> {
             grid.setNullIfMe(p);

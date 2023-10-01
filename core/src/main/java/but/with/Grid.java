@@ -47,35 +47,8 @@ public class Grid implements InputHandler {
         pixels.set(gridPos.y * W + gridPos.x, NULL);
     }
 
-    public boolean isNull(int wannaX, int wannaY) {
-        return pixels.get(wannaY * W + wannaX) == NULL;
-    }
-
     public BlockPixel get(int wannaX, int wannaY) {
         return pixels.get(wannaY * W + wannaX);
-    }
-
-    public void safeSet(BlockPixel b) {
-        if (b.gridPos.y >= 0 && b.gridPos.y < DISPLAY_H && b.gridPos.x >= 0 && b.gridPos.x < W)
-            pixels.set(b.gridPos.y * W + b.gridPos.x, b);
-    }
-
-    public BlockPixel safeGet(int x, int y) {
-        if (y >= 0 && y < DISPLAY_H && x >= 0 && x < W)
-            return get(x, y);
-        return NULL;
-    }
-
-    public int clampY(int y) {
-        if (y < 0)
-            return 0;
-        return Math.min(y, DISPLAY_H - 1);
-    }
-
-    public int clampX(int x) {
-        if (x < 0)
-            return 0;
-        return Math.min(x, W - 1);
     }
 
     public void setNullIfMe(BlockPixel pixel) {

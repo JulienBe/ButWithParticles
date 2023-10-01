@@ -36,7 +36,7 @@ public class Piece {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-            if (diffMap.stream().allMatch(diff -> diff >= Block.SIZE)) {
+            if (diffMap.stream().allMatch(diff -> diff > 0)) {
                 blockedTicks = 0;
                 blocks.forEach(b -> b.moveDown(grid));
             } else {
