@@ -34,32 +34,39 @@ public class Grid implements InputHandler {
 
     public void act(Time time) {
         if (time.justTicked) {
-            pixels.forEach(p -> {
-                // make sand fall down if free or randomly to down left or down right if free
-                if (p.sand && p.gridPos.y > 0 && Rnd.instance.nextBoolean()) {
-                    // can if fall down?
-                    setNull(p.gridPos);
-                    if (get(p.gridPos.x, p.gridPos.y - 1) == NULL) {
-                        p.gridPos.y--;
-                    } else {
-                        if (Rnd.instance.nextBoolean() && p.gridPos.x > 0 && get(p.gridPos.x - 1, p.gridPos.y - 1) == NULL) {
-                            p.gridPos.x--;
-                            p.gridPos.y--;
-                        } else if (p.gridPos.x < W && get(p.gridPos.x + 1, p.gridPos.y - 1) == NULL) {
-                            p.gridPos.x++;
-                            p.gridPos.y--;
-                        }
-                    }
-                    set(p);
-                }
-            });
-            pieces.forEach(p -> {
-                if (!p.act(time, this)) {
-                    p.convertToSand();
-                    pieces.removeValue(p, true);
-                }
-            });
+            actSand();
+            actPieces(time);
         }
+    }
+
+    private void actSand() {
+        pixels.forEach(p -> {
+            // make sand fall down if free or randomly to down left or down right if free
+            if (p.sand && p.gridPos.y > 0 && Rnd.instance.nextBoolean()) {
+                setNull(p.gridPos);
+                if (get(p.gridPos.x, p.gridPos.y - 1) == NULL) {
+                    p.gridPos.y--;
+                } else {
+                    if (Rnd.instance.nextBoolean() && p.gridPos.x > 0 && get(p.gridPos.x - 1, p.gridPos.y - 1) == NULL) {
+                        p.gridPos.x--;
+                        p.gridPos.y--;
+                    } else if (p.gridPos.x < W - 1 && get(p.gridPos.x + 1, p.gridPos.y - 1) == NULL) {
+                        p.gridPos.x++;
+                        p.gridPos.y--;
+                    }
+                }
+                set(p);
+            }
+        });
+    }
+
+    private void actPieces(Time time) {
+        pieces.forEach(p -> {
+            if (!p.act(time, this)) {
+                p.convertToSand();
+                pieces.removeValue(p, true);
+            }
+        });
     }
 
     public void set(BlockPixel pixel) {
