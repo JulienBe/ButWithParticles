@@ -1,22 +1,22 @@
 package but.with;
 
-public class GridPos {
+public class Pos {
     int x;
     int y;
 
-    public GridPos(int gridX, int gridY) {
+    public Pos(int gridX, int gridY) {
         this.x = gridX;
         this.y = gridY;
     }
 
-
-    public int downOneBlock() {
-        return y - Block.SIZE;
+    public void update(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
     public String toString() {
-        return "GridPos{" +
+        return "Pos{" +
             "x=" + x +
             ", y=" + y +
             '}';

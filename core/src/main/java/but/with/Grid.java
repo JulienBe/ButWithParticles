@@ -3,6 +3,8 @@ package but.with;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.List;
+
 import static but.with.BlockPixel.NULL;
 
 public class Grid implements InputHandler {
@@ -33,26 +35,26 @@ public class Grid implements InputHandler {
     }
 
     public void act(Time time) {
-        if (time.justTicked) {
+        if (time.sand.act)
             actSand();
+        if (time.pieces.act)
             actPieces(time);
-        }
     }
 
     private void actSand() {
         pixels.forEach(p -> {
             // make sand fall down if free or randomly to down left or down right if free
-            if (p.sand && p.gridPos.y > 0 && Rnd.instance.nextBoolean()) {
-                setNull(p.gridPos);
-                if (get(p.gridPos.x, p.gridPos.y - 1) == NULL) {
-                    p.gridPos.y--;
+            if (p.sand && p.pos.y > 0 && Rnd.instance.nextBoolean()) {
+                setNull(p.pos);
+                if (get(p.pos.x, p.pos.y - 1) == NULL) {
+                    p.pos.y--;
                 } else {
-                    if (Rnd.instance.nextBoolean() && p.gridPos.x > 0 && get(p.gridPos.x - 1, p.gridPos.y - 1) == NULL) {
-                        p.gridPos.x--;
-                        p.gridPos.y--;
-                    } else if (p.gridPos.x < W - 1 && get(p.gridPos.x + 1, p.gridPos.y - 1) == NULL) {
-                        p.gridPos.x++;
-                        p.gridPos.y--;
+                    if (Rnd.instance.nextBoolean() && p.pos.x > 0 && get(p.pos.x - 1, p.pos.y - 1) == NULL) {
+                        p.pos.x--;
+                        p.pos.y--;
+                    } else if (p.pos.x < W - 1 && get(p.pos.x + 1, p.pos.y - 1) == NULL) {
+                        p.pos.x++;
+                        p.pos.y--;
                     }
                 }
                 set(p);
@@ -70,10 +72,18 @@ public class Grid implements InputHandler {
     }
 
     public void set(BlockPixel pixel) {
-        pixels.set(pixel.gridPos.y * W + pixel.gridPos.x, pixel);
+        checkPos(pixel.pos);
+        pixels.set(pixel.pos.y * W + pixel.pos.x, pixel);
     }
-    public void setNull(GridPos gridPos) {
-        pixels.set(gridPos.y * W + gridPos.x, NULL);
+
+    private void checkPos(Pos pos) {
+        if (!isValid(pos))
+            throw new RuntimeException("Invalid pos: " + pos.x + ", " + pos.y);
+    }
+
+    public void setNull(Pos pos) {
+        checkPos(pos);
+        pixels.set(pos.y * W + pos.x, NULL);
     }
 
     public BlockPixel get(int wannaX, int wannaY) {
@@ -81,17 +91,19 @@ public class Grid implements InputHandler {
     }
 
     public void setNullIfMe(BlockPixel pixel) {
-        if (get(pixel.gridPos.x, pixel.gridPos.y) == pixel)
-            setNull(pixel.gridPos);
+        if (get(pixel.pos.x, pixel.pos.y) == pixel)
+            setNull(pixel.pos);
     }
 
     /**
      * @return the y coordinate of the first non-null pixel below the given one
      */
-    public int castRayDown(int x, int startY) {
-        for (int y = startY; y >= 0; y--)
-            if (get(x, y) != NULL)
+    public int castRayDown(int x, int startY, List<BlockPixel> ignoreList) {
+        for (int y = startY; y >= 0; y--) {
+            BlockPixel bp = get(x, y);
+            if (bp != NULL && !ignoreList.contains(bp))
                 return y;
+        }
         return 0;
     }
 
@@ -105,5 +117,15 @@ public class Grid implements InputHandler {
     public void onRight() {
         pieces.forEach(piece -> piece.lateralMove(+Block.SIZE, this));
         InputHandler.super.onRight();
+    }
+
+    @Override
+    public boolean onRotate() {
+        pieces.forEach(piece -> piece.rotate(this));
+        return true;
+    }
+
+    public boolean isValid(Pos pos) {
+        return pos.x >= 0 && pos.x < W && pos.y >= 0 && pos.y < DISPLAY_H;
     }
 }

@@ -8,18 +8,18 @@ import static but.with.Main.PIXEL_SIZE;
  * In the model, a block is 6 inner pixels and 2 outer pixels.
  */
 public class BlockPixel {
-    public static final BlockPixel NULL = new BlockPixel(new GridPos(0, 0), new MyColor(), new Grid());
-    GridPos gridPos;
+    public static final BlockPixel NULL = new BlockPixel(new Pos(0, 0), new MyColor(), new Grid());
+    Pos pos;
     private MyColor color;
     boolean sand = false;
 
-    public BlockPixel(GridPos gridPos, MyColor color, Grid grid) {
-        this.gridPos = gridPos;
+    public BlockPixel(Pos pos, MyColor color, Grid grid) {
+        this.pos = pos;
         this.color = color;
         grid.set(this);
     }
 
     public void display(Batch batch, Grid grid) {
-        color.draw(batch, grid.x + gridPos.x * PIXEL_SIZE, grid.y + gridPos.y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+        color.draw(batch, grid.x + pos.x * PIXEL_SIZE, grid.y + pos.y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
     }
 }

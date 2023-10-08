@@ -21,6 +21,12 @@ public class Gamepad extends InputAdapter {
         map.put(Input.Keys.RIGHT, InputHandler::onRight);
         map.put(Input.Keys.NUMPAD_6, InputHandler::onRight);
         map.put(Input.Keys.D, InputHandler::onRight);
+
+        map.put(Input.Keys.UP, InputHandler::onRotate);
+        map.put(Input.Keys.NUMPAD_8, InputHandler::onRotate);
+        map.put(Input.Keys.W, InputHandler::onRotate);
+        map.put(Input.Keys.SPACE, InputHandler::onRotate);
+        map.put(Input.Keys.NUMPAD_5, InputHandler::onRotate);
         return map;
     }
 
