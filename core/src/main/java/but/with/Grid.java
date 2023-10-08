@@ -5,8 +5,6 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.List;
 
-import static but.with.BlockPixel.NULL;
-
 public class Grid implements InputHandler {
     public static final int W = 10 * Block.SIZE;
     public static final int H = 20 * Block.SIZE;
@@ -20,7 +18,7 @@ public class Grid implements InputHandler {
     public Grid() {
         for (int x = 0; x < W; x++) {
             for (int y = 0; y < DISPLAY_H; y++) {
-                pixels.add(NULL);
+                pixels.add(null);
             }
         }
     }
@@ -31,7 +29,9 @@ public class Grid implements InputHandler {
 
     public void display(SpriteBatch batch) {
         color.draw(batch, x, y, W * Main.PIXEL_SIZE, DISPLAY_H * Main.PIXEL_SIZE);
-        pixels.forEach(p -> p.display(batch, this));
+        pixels.forEach(p -> {
+            if (p != null) p.display(batch, this);
+        });
     }
 
     public void act(Time time) {
@@ -44,15 +44,15 @@ public class Grid implements InputHandler {
     private void actSand() {
         pixels.forEach(p -> {
             // make sand fall down if free or randomly to down left or down right if free
-            if (p.sand && p.pos.y > 0 && Rnd.instance.nextBoolean()) {
+            if (p != null && p.sand && p.pos.y > 0 && Rnd.instance.nextBoolean()) {
                 setNull(p.pos);
-                if (get(p.pos.x, p.pos.y - 1) == NULL) {
+                if (get(p.pos.x, p.pos.y - 1) == null) {
                     p.pos.y--;
                 } else {
-                    if (Rnd.instance.nextBoolean() && p.pos.x > 0 && get(p.pos.x - 1, p.pos.y - 1) == NULL) {
+                    if (Rnd.instance.nextBoolean() && p.pos.x > 0 && get(p.pos.x - 1, p.pos.y - 1) == null) {
                         p.pos.x--;
                         p.pos.y--;
-                    } else if (p.pos.x < W - 1 && get(p.pos.x + 1, p.pos.y - 1) == NULL) {
+                    } else if (p.pos.x < W - 1 && get(p.pos.x + 1, p.pos.y - 1) == null) {
                         p.pos.x++;
                         p.pos.y--;
                     }
@@ -83,7 +83,7 @@ public class Grid implements InputHandler {
 
     public void setNull(Pos pos) {
         checkPos(pos);
-        pixels.set(pos.y * W + pos.x, NULL);
+        pixels.set(pos.y * W + pos.x, null);
     }
 
     public BlockPixel get(int wannaX, int wannaY) {
@@ -101,7 +101,7 @@ public class Grid implements InputHandler {
     public int castRayDown(int x, int startY, List<BlockPixel> ignoreList) {
         for (int y = startY; y >= 0; y--) {
             BlockPixel bp = get(x, y);
-            if (bp != NULL && !ignoreList.contains(bp))
+            if (bp != null && !ignoreList.contains(bp))
                 return y;
         }
         return 0;

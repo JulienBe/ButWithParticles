@@ -73,7 +73,7 @@ public class Block {
             if (!grid.isValid(newPixelPos))
                 return false;
             BlockPixel currentPixel = grid.get(newPixelPos.x, newPixelPos.y);
-            if (currentPixel != BlockPixel.NULL && !ignoreList.contains(currentPixel))
+            if (currentPixel != null && !ignoreList.contains(currentPixel))
                 return false;
         }
 

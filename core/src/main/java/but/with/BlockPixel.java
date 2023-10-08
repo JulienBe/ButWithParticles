@@ -8,7 +8,6 @@ import static but.with.Main.PIXEL_SIZE;
  * In the model, a block is 6 inner pixels and 2 outer pixels.
  */
 public class BlockPixel {
-    public static final BlockPixel NULL = new BlockPixel(new Pos(0, 0), new MyColor(), new Grid());
     Pos pos;
     private MyColor color;
     boolean sand = false;

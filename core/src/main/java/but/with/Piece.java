@@ -13,7 +13,7 @@ enum Templates {
     J(new Offset(0, 0), new Offset(1, 0), new Offset(2, 0), new Offset(0, 1)),
     L(new Offset(0, 0), new Offset(1, 0), new Offset(2, 0), new Offset(2, 1));
 
-    Offset[] horizontal;
+    final Offset[] horizontal;
 
     Templates(Offset one, Offset two, Offset tree, Offset four) {
         this.horizontal = new Offset[]{one, two, tree, four};
