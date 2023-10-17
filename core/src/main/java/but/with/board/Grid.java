@@ -1,19 +1,25 @@
-package but.with;
+package but.with.board;
 
+import but.with.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.List;
+import java.util.*;
+
+import static but.with.Main.PIXEL_SIZE;
 
 public class Grid implements InputHandler {
     public static final int W = 10 * Block.SIZE;
     public static final int H = 20 * Block.SIZE;
     public static final int DISPLAY_H = H + (4 * Block.SIZE);
-    int x = Block.SIZE * 2;
-    int y = Block.SIZE * 2;
+    public int x = Block.SIZE * 2;
+    public int y = Block.SIZE * 2;
     private final Array<Piece> pieces = new Array<>();
     private final Array<BlockPixel> pixels = new Array<>(DISPLAY_H * W);
     private MyColor color = new MyColor(8);
+    boolean displayBags = false;
 
     public Grid() {
         for (int x = 0; x < W; x++) {
@@ -28,38 +34,41 @@ public class Grid implements InputHandler {
     }
 
     public void display(SpriteBatch batch) {
-        color.draw(batch, x, y, W * Main.PIXEL_SIZE, DISPLAY_H * Main.PIXEL_SIZE);
-        pixels.forEach(p -> {
-            if (p != null) p.display(batch, this);
-        });
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F6))
+            displayBags = !displayBags;
+        color.draw(batch, x, y, W * PIXEL_SIZE, DISPLAY_H * PIXEL_SIZE);
+        if (displayBags) {
+            Set<Sandbag> sandbags = new HashSet<>();
+            pixels.forEach(p -> {
+                if (p != null && p.sandbag != null)
+                    sandbags.add(p.sandbag);
+            });
+            int i = 0;
+            for (Sandbag sandbag : sandbags) {
+                int finalI = i % MyColor.COLORS;
+                sandbag.sand.forEach(p -> {
+                    new MyColor(finalI).draw(batch, x + p.pos.x * PIXEL_SIZE, y + p.pos.y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+                });
+                i++;
+            }
+        } else
+            pixels.forEach(p -> {
+                if (p != null) p.display(batch, this);
+            });
     }
 
     public void act(Time time) {
-        if (time.sand.act)
-            actSand();
         if (time.pieces.act)
             actPieces(time);
+        if (time.sand.act)
+            SandGrid.actSand(pixels, this);
     }
 
-    private void actSand() {
-        pixels.forEach(p -> {
-            // make sand fall down if free or randomly to down left or down right if free
-            if (p != null && p.sand && p.pos.y > 0 && Rnd.instance.nextBoolean()) {
-                setNull(p.pos);
-                if (get(p.pos.x, p.pos.y - 1) == null) {
-                    p.pos.y--;
-                } else {
-                    if (Rnd.instance.nextBoolean() && p.pos.x > 0 && get(p.pos.x - 1, p.pos.y - 1) == null) {
-                        p.pos.x--;
-                        p.pos.y--;
-                    } else if (p.pos.x < W - 1 && get(p.pos.x + 1, p.pos.y - 1) == null) {
-                        p.pos.x++;
-                        p.pos.y--;
-                    }
-                }
-                set(p);
-            }
-        });
+    void updatePos(BlockPixel pixel, int diffX) {
+        setNull(pixel.pos);
+        pixel.pos.x += diffX;
+        pixel.pos.y -= 1;
+        set(pixel);
     }
 
     private void actPieces(Time time) {
@@ -125,7 +134,7 @@ public class Grid implements InputHandler {
         return true;
     }
 
-    public boolean isValid(Pos pos) {
+    public static boolean isValid(Pos pos) {
         return pos.x >= 0 && pos.x < W && pos.y >= 0 && pos.y < DISPLAY_H;
     }
 }

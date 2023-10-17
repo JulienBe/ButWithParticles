@@ -9,11 +9,11 @@ public class Time {
         sand.act(deltaTime);
     }
 
-    class Tick {
+    public class Tick {
         private float tick;
         private float time = 0f;
         private int currentTick = 0;
-        boolean act = false;
+        public boolean act = false;
 
         public Tick(float tick) {
             this.tick = tick;

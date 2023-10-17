@@ -1,8 +1,8 @@
 package but.with;
 
 public class Pos {
-    int x;
-    int y;
+    public int x;
+    public int y;
 
     public Pos(int gridX, int gridY) {
         this.x = gridX;

@@ -1,5 +1,7 @@
 package but.with;
 
+import but.with.board.Grid;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +34,9 @@ public class Piece {
 
     public Piece(Grid grid) {
         template = Templates.rnd();
+        MyColor color = MyColor.pieceColor();
         for (Offset offset : template.horizontal) {
-            Block b = new Block(Grid.W/2 + offset.x*Block.SIZE, Grid.H + offset.y*Block.SIZE, grid);
+            Block b = new Block(Grid.W/2 + offset.x*Block.SIZE, Grid.H + offset.y*Block.SIZE, grid, color);
             blocks.add(b);
         }
         currentOffset = 0;
@@ -63,7 +66,7 @@ public class Piece {
     }
 
     public void convertToSand() {
-        blocks.forEach(b -> b.pixels.forEach(p -> p.sand = true));
+        blocks.forEach(b -> b.pixels.forEach(BlockPixel::sandIt));
     }
 
     public boolean rotate(Grid grid) {

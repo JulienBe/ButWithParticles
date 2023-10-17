@@ -1,5 +1,7 @@
 package but.with;
 
+import but.with.board.Grid;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,16 +15,17 @@ public class Block {
 
     public static final int SIZE = 8;
     List<BlockPixel> pixels = new ArrayList<>(SIZE * SIZE);
-    private MyColor color = new MyColor();
+    private MyColor color;
     private int bottomY;
     private int leftX;
 
-    public Block(int gridX, int gridY, Grid grid) {
+    public Block(int gridX, int gridY, Grid grid, MyColor color) {
+        this.color = color;
         for (int i = 0; i < SIZE * SIZE; i++) {
             pixels.add(
                 new BlockPixel(
                     new Pos(gridX + (i % SIZE), gridY + (i / SIZE)),
-                    color,
+                    this.color,
                     grid)
             );
         }
