@@ -34,19 +34,11 @@ public class Block {
     }
 
     public void moveDown(Grid grid) {
-        pixels.forEach(p -> {
-            grid.setNullIfMe(p);
-            p.pos.y--;
-            grid.set(p);
-        });
+        pixels.forEach(p -> p.movePiece(grid, 0, -1) );
         bottomY--;
     }
     public void lateralMove(int i, Grid grid) {
-        pixels.forEach(p -> {
-            grid.setNullIfMe(p);
-            p.pos.x += i;
-            grid.set(p);
-        });
+        pixels.forEach(p -> p.movePiece(grid, i, 0));
         leftX += i;
     }
 
@@ -59,12 +51,8 @@ public class Block {
 
     public void rotate(Grid grid, Offset offset, int currentOffset) {
         Pos newBlockPos = getRotatePos(offset, currentOffset);
-        for (int i = 0; i < pixels.size(); i++) {
-            BlockPixel p = pixels.get(i);
-            grid.setNullIfMe(p);
-            p.pos.update(newBlockPos.x + i % SIZE, newBlockPos.y + i / SIZE);
-            grid.set(p);
-        }
+        for (int i = 0; i < pixels.size(); i++)
+            pixels.get(i).newPos(grid, newBlockPos.x + i % SIZE, newBlockPos.y + i / SIZE);
         leftX = newBlockPos.x;
         bottomY = newBlockPos.y;
     }

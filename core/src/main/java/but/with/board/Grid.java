@@ -8,8 +8,6 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.*;
 
-import static but.with.Main.PIXEL_SIZE;
-
 public class Grid implements InputHandler {
     public static final int W = 10 * Block.SIZE;
     public static final int H = 20 * Block.SIZE;
@@ -33,10 +31,10 @@ public class Grid implements InputHandler {
         pieces.add(new Piece(this));
     }
 
-    public void display(SpriteBatch batch) {
+    public void display(SpriteBatch batch, int pixelSize) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F6))
             displayBags = !displayBags;
-        color.draw(batch, x, y, W * PIXEL_SIZE, DISPLAY_H * PIXEL_SIZE);
+        color.draw(batch, x, y, W * pixelSize, DISPLAY_H * pixelSize);
         if (displayBags) {
             Set<Sandbag> sandbags = new HashSet<>();
             pixels.forEach(p -> {
@@ -47,13 +45,13 @@ public class Grid implements InputHandler {
             for (Sandbag sandbag : sandbags) {
                 int finalI = i % MyColor.COLORS;
                 sandbag.sand.forEach(p -> {
-                    new MyColor(finalI).draw(batch, x + p.pos.x * PIXEL_SIZE, y + p.pos.y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
+                    new MyColor(finalI).draw(batch, x + p.x() * pixelSize, y + p.y() * pixelSize, pixelSize, pixelSize);
                 });
                 i++;
             }
         } else
             pixels.forEach(p -> {
-                if (p != null) p.display(batch, this);
+                if (p != null) p.display(batch, this, pixelSize);
             });
     }
 
@@ -62,13 +60,6 @@ public class Grid implements InputHandler {
             actPieces(time);
         if (time.sand.act)
             SandGrid.actSand(pixels, this);
-    }
-
-    void updatePos(BlockPixel pixel, int diffX) {
-        setNull(pixel.pos);
-        pixel.pos.x += diffX;
-        pixel.pos.y -= 1;
-        set(pixel);
     }
 
     private void actPieces(Time time) {
@@ -80,14 +71,18 @@ public class Grid implements InputHandler {
         });
     }
 
-    public void set(BlockPixel pixel) {
-        checkPos(pixel.pos);
-        pixels.set(pixel.pos.y * W + pixel.pos.x, pixel);
+    public void set(BlockPixel pixel, Pos pos) {
+        checkPos(pos);
+        pixels.set(pos.y * W + pos.x, pixel);
     }
 
     private void checkPos(Pos pos) {
         if (!isValid(pos))
             throw new RuntimeException("Invalid pos: " + pos.x + ", " + pos.y);
+    }
+
+    void setNull(int x, int y) {
+        pixels.set(y * W + x, null);
     }
 
     public void setNull(Pos pos) {
@@ -99,9 +94,9 @@ public class Grid implements InputHandler {
         return pixels.get(wannaY * W + wannaX);
     }
 
-    public void setNullIfMe(BlockPixel pixel) {
-        if (get(pixel.pos.x, pixel.pos.y) == pixel)
-            setNull(pixel.pos);
+    public void setNullIfMe(BlockPixel pixel, Pos pos) {
+        if (get(pos.x, pos.y) == pixel)
+            setNull(pos);
     }
 
     /**

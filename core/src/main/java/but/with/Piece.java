@@ -89,7 +89,7 @@ public class Piece {
             int rightest = blocks.stream()              // iterate over all the block pixels to find the rightest
                 .mapToInt(b ->
                     b.pixels.stream()
-                        .mapToInt(p -> p.pos.x)
+                        .mapToInt(BlockPixel::x)
                         .max()
                         .getAsInt())
                 .max()
@@ -99,7 +99,7 @@ public class Piece {
             int leftest = blocks.stream()               // iterate over all the block pixels to find the leftest
                 .mapToInt(b ->
                     b.pixels.stream()
-                        .mapToInt(p -> p.pos.x)
+                        .mapToInt(BlockPixel::x)
                         .min()
                         .getAsInt())
                 .min()

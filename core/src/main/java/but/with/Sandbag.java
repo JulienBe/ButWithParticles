@@ -33,7 +33,7 @@ public class Sandbag {
     }
 
     public boolean connectLeftRight() {
-        return sand.stream().anyMatch(p -> p.pos.x == 0) && sand.stream().anyMatch(p -> p.pos.x == Grid.W - 1);
+        return sand.stream().anyMatch(p -> p.x() == 0) && sand.stream().anyMatch(p -> p.x() == Grid.W - 1);
     }
 
     public boolean colorMatch(Sandbag sandbag) {

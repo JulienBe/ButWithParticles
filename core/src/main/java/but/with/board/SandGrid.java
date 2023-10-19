@@ -26,27 +26,22 @@ public class SandGrid {
             if (p != null && p.sandbag != null)
                 bags.add(p.sandbag);
         });
-        for (Sandbag bag : bags) {
-            if (bag.connectLeftRight()) {
-                bag.sand.forEach(p -> {
-                    grid.setNull(p.pos);
-                    p.sand = false;
-                });
-            }
-        }
+        for (Sandbag bag : bags)
+            if (bag.connectLeftRight())
+                bag.sand.forEach(p -> grid.setNull(p.x(), p.y()));
     }
 
     private static void move(Array<BlockPixel> pixels, Grid grid) {
         pixels.forEach(p -> {
             // make sand fall down if free or randomly to down left or down right if free
-            if (p != null && p.sand && Rnd.instance.nextBoolean() && p.pos.y > 0) {
-                if (grid.get(p.pos.x, p.pos.y - 1) == null)
-                    grid.updatePos(p, 0);
+            if (p != null && p.sand && Rnd.instance.nextBoolean() && p.y() > 0) {
+                if (grid.get(p.x(), p.y() - 1) == null)
+                    p.moveSand(0, grid);
                 else
-                    if (Rnd.instance.nextBoolean() && p.pos.x > 0 && grid.get(p.pos.x - 1, p.pos.y - 1) == null)
-                        grid.updatePos(p, -1);
-                    else if (p.pos.x < Grid.W - 1 && grid.get(p.pos.x + 1, p.pos.y - 1) == null)
-                        grid.updatePos(p, 1);
+                    if (Rnd.instance.nextBoolean() && p.x() > 0 && grid.get(p.x() - 1, p.y() - 1) == null)
+                        p.moveSand(-1, grid);
+                    else if (p.x() < Grid.W - 1 && grid.get(p.x() + 1, p.y() - 1) == null)
+                        p.moveSand(1, grid);
                 p.sandbag = null;
                 findBags(p, grid);
             }
@@ -64,7 +59,7 @@ public class SandGrid {
     private static Set<Sandbag> getMatchingBags(BlockPixel p, Grid grid) {
         Set<Sandbag> matchingBags = new HashSet<>();
         for (Offset offset : neighborsOffset) {
-            Pos neighborPos = new Pos(p.pos.x + offset.x, p.pos.y + offset.y);
+            Pos neighborPos = new Pos(p.x() + offset.x, p.y() + offset.y);
             if (Grid.isValid(neighborPos)) {
                 BlockPixel neighbor = grid.get(neighborPos.x, neighborPos.y);
                 if (neighbor != null && neighbor.sand && neighbor.sandbag != null && neighbor.sandbag.colorMatch(p.sandbag))
