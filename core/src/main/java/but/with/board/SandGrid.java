@@ -17,7 +17,6 @@ public class SandGrid {
     };
     private DisappearingAnim disappearing = null;
 
-
     /**
      * Make sand fall
      * @param pixels
@@ -32,8 +31,9 @@ public class SandGrid {
             }
             return true;
         }
-        move(pixels, grid);
-        checkConnections(pixels);
+        int moved = move(pixels, grid);
+        if (moved < 10)
+            checkConnections(pixels);
         return false;
     }
 
@@ -57,20 +57,22 @@ public class SandGrid {
         return null;
     }
 
-    private void move(Array<BlockPixel> pixels, Grid grid) {
-        pixels.forEach(p -> {
+    private int move(Array<BlockPixel> pixels, Grid grid) {
+        int moved = 0;
+        for (BlockPixel p : pixels) {
             // make sand fall down if free or randomly to down left or down right if free
             if (p != null && p.sand && Rnd.instance.nextBoolean()) {
                 if (p.y() > 0 && grid.get(p.x(), p.y() - 1) == null)
-                    p.moveSand(0, grid);
+                    moved += p.moveSand(0, grid);
                 else
                     if (p.y() > 0 && Rnd.instance.nextBoolean() && p.x() > 0 && grid.get(p.x() - 1, p.y() - 1) == null)
-                        p.moveSand(-1, grid);
+                        moved += p.moveSand(-1, grid);
                     else if (p.y() > 0 && p.x() < Grid.W - 1 && grid.get(p.x() + 1, p.y() - 1) == null)
-                        p.moveSand(1, grid);
+                        moved += p.moveSand(1, grid);
                 findBags(p, grid);
             }
-        });
+        }
+        return moved;
     }
 
     private void findBags(BlockPixel p, Grid grid) {

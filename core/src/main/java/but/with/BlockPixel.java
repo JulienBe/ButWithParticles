@@ -51,9 +51,11 @@ public class BlockPixel {
         newPos(grid, pos.x + diffX, pos.y + diffY);
     }
 
-    public void moveSand(int diffX, Grid grid) {
+    public int moveSand(int diffX, Grid grid) {
         newPos(grid, pos.x + diffX, pos.y - 1);
+        return diffX == 0 ? 2 : 1; // If I can fall straight, I should probably count as 2
     }
+
     public void newPos(Grid grid, int x, int y) {
         grid.setNullIfMe(this, pos);
         pos.x = x;
