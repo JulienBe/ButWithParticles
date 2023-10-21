@@ -13,7 +13,8 @@ public class MyColor {
     public static final int COLORS = 16;
     public static final int SHADES = 6;
     public static final Array<TextureRegion> textures = getTextureRegions();
-    private static final int[] PIECE_COLORS = {3, 6, 10, 11};
+//    private static final int[] PIECE_COLORS = {3, 6, 10, 11};
+    private static final int[] PIECE_COLORS = {3};
     private int color = 0;
     private int shade = 0;
 

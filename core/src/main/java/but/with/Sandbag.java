@@ -41,4 +41,9 @@ public class Sandbag {
             return false;
         return sandbag.getColor().equals(getColor());
     }
+
+    public void dispose() {
+        sand.forEach(p -> p.sandbag = null);
+        sand = null;
+    }
 }

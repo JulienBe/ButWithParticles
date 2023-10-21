@@ -18,6 +18,7 @@ public class Grid implements InputHandler {
     private final Array<BlockPixel> pixels = new Array<>(DISPLAY_H * W);
     private MyColor color = new MyColor(8);
     boolean displayBags = false;
+    private final SandGrid sandGrid = new SandGrid();
 
     public Grid() {
         for (int x = 0; x < W; x++) {
@@ -59,7 +60,7 @@ public class Grid implements InputHandler {
         if (time.pieces.act)
             actPieces(time);
         if (time.sand.act)
-            SandGrid.actSand(pixels, this);
+            sandGrid.actSand(pixels, this);
     }
 
     private void actPieces(Time time) {
@@ -81,7 +82,7 @@ public class Grid implements InputHandler {
             throw new RuntimeException("Invalid pos: " + pos.x + ", " + pos.y);
     }
 
-    void setNull(int x, int y) {
+    public void setNull(int x, int y) {
         pixels.set(y * W + x, null);
     }
 
