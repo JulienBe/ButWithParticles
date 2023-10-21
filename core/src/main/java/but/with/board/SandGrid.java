@@ -32,9 +32,7 @@ public class SandGrid {
             }
             return true;
         }
-        long startMove = System.nanoTime();
         move(pixels, grid);
-        System.out.println("move: " + (System.nanoTime() - startMove) / 1000000.0);
         checkConnections(pixels);
         return false;
     }
@@ -42,7 +40,7 @@ public class SandGrid {
     private boolean checkConnections(Array<BlockPixel> pixels) {
         Sandbag bag = checkBagToDisappear(pixels);
         if (bag != null)
-            disappearing = new DisappearingAnim(bag, bag.sand.size() / 20, bag.sand.iterator());
+            disappearing = new DisappearingAnim(bag, bag.size() / 20, bag.sand.iterator());
 
         return disappearing == null;
     }
@@ -70,22 +68,28 @@ public class SandGrid {
                         p.moveSand(-1, grid);
                     else if (p.y() > 0 && p.x() < Grid.W - 1 && grid.get(p.x() + 1, p.y() - 1) == null)
                         p.moveSand(1, grid);
-                p.sandbag = null;
                 findBags(p, grid);
             }
         });
     }
 
     private void findBags(BlockPixel p, Grid grid) {
-        Sandbag letsAnnoyTheGCNewBag = p.newBag();
         Set<Sandbag> matchingBags = getMatchingBags(p, grid);
-        for (Sandbag bag : matchingBags) {
-            letsAnnoyTheGCNewBag.merge(bag);
-        }
+
+        Iterator<Sandbag> it = matchingBags.iterator();
+        Sandbag rootBag;
+        if (it.hasNext())
+            rootBag = it.next();
+        else
+            rootBag = p.newBag();
+        while (it.hasNext())
+            rootBag.merge(it.next());
     }
 
     private Set<Sandbag> getMatchingBags(BlockPixel p, Grid grid) {
         Set<Sandbag> matchingBags = new HashSet<>();
+        if (p.sandbag != null)
+            matchingBags.add(p.sandbag);
         for (Offset offset : neighborsOffset) {
             Pos neighborPos = new Pos(p.x() + offset.x, p.y() + offset.y);
             if (Grid.isValid(neighborPos)) {

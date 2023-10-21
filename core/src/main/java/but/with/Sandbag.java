@@ -1,6 +1,7 @@
 package but.with;
 
 import but.with.board.Grid;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,7 @@ public class Sandbag {
     }
 
     public void add(BlockPixel p) {
-        sand.add(p);
+            sand.add(p);
     }
 
     public void remove(BlockPixel p) {
@@ -45,5 +46,15 @@ public class Sandbag {
     public void dispose() {
         sand.forEach(p -> p.sandbag = null);
         sand = null;
+    }
+
+    public void draw(SpriteBatch batch, Grid grid, int pixelSize, MyColor myColor) {
+        sand.forEach(p -> {
+            myColor.draw(batch, grid.x + p.x() * pixelSize, grid.y + p.y() * pixelSize, pixelSize, pixelSize);
+        });
+    }
+
+    public int size() {
+        return sand.size();
     }
 }

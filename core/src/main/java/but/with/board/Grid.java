@@ -44,10 +44,7 @@ public class Grid implements InputHandler {
             });
             int i = 0;
             for (Sandbag sandbag : sandbags) {
-                int finalI = i % MyColor.COLORS;
-                sandbag.sand.forEach(p -> {
-                    new MyColor(finalI).draw(batch, x + p.x() * pixelSize, y + p.y() * pixelSize, pixelSize, pixelSize);
-                });
+                sandbag.draw(batch, this, pixelSize, new MyColor(i % MyColor.COLORS));
                 i++;
             }
         } else
