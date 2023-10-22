@@ -16,7 +16,7 @@ public class Grid implements InputHandler {
     public int y = Block.SIZE * 2;
     private final Array<Piece> pieces = new Array<>();
     private final Array<BlockPixel> pixels = new Array<>(DISPLAY_H * W);
-    private MyColor color = new MyColor(8);
+    private MyColor color = new MyColor(7);
     boolean displayBags = false;
     private final SandGrid sandGrid = new SandGrid();
 
@@ -26,6 +26,7 @@ public class Grid implements InputHandler {
                 pixels.add(null);
             }
         }
+        color.bright();
     }
 
     public void addPiece() {

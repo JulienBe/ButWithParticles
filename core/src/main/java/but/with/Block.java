@@ -15,17 +15,17 @@ public class Block {
 
     public static final int SIZE = 8;
     List<BlockPixel> pixels = new ArrayList<>(SIZE * SIZE);
-    private MyColor color;
+    private int color;
     private int bottomY;
     private int leftX;
 
-    public Block(int gridX, int gridY, Grid grid, MyColor color) {
+    public Block(int gridX, int gridY, Grid grid, int color) {
         this.color = color;
         for (int i = 0; i < SIZE * SIZE; i++) {
             pixels.add(
                 new BlockPixel(
                     new Pos(gridX + (i % SIZE), gridY + (i / SIZE)),
-                    this.color,
+                    new MyColor(this.color),
                     grid)
             );
         }

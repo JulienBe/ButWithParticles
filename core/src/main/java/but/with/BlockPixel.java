@@ -14,10 +14,12 @@ public class BlockPixel {
     public boolean sand = false;
     boolean rested = false;
 
+
     public BlockPixel(Pos pos, MyColor color, Grid grid) {
         this.pos = pos;
         this.color = color;
         grid.set(this, pos);
+        color.phaseIn();
     }
 
     public void display(Batch batch, Grid grid, int pixelSize) {

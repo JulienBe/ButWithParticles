@@ -34,7 +34,7 @@ public class Piece {
 
     public Piece(Grid grid) {
         template = Templates.rnd();
-        MyColor color = MyColor.pieceColor();
+        int color = MyColor.pieceColor();
         for (Offset offset : template.horizontal) {
             Block b = new Block(Grid.W/2 + offset.x*Block.SIZE, Grid.H + offset.y*Block.SIZE, grid, color);
             blocks.add(b);
